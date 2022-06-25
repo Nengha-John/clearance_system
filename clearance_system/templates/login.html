@@ -28,6 +28,25 @@
             <form action="/login" method="post">
                 {% csrf_token %}
                 <p class="fs-4 align-self-center"> Welcome to Online Clearance System</p>
+                 <center>
+
+        <div class="col mt-3">
+            
+            {% if messages %}
+            {% for message in messages %}
+            {% if message.tags == 'success'%}
+            <div class="alert alert-success" role="alert">
+                <i class="icon ion-md-information-circle me-3" style="font-size: 24px;"></i> {{ message }}
+            </div>
+            {% elif message.tags == 'error'%}
+            <div class="alert alert-danger" role="alert">
+                <i class="icon ion-md-warning me-3" style="font-size: 24px;"></i> {{ message }}
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+        </div>
+    </center>
                 <div class="">
                     
                     {% block body%}
@@ -41,6 +60,10 @@
                         
                     </div>
                     {% endfor %}
+                    <div class="mb-3">
+                      <label for="std-number">Provide your registration number:</label>
+                      <input type="text" name="std-number" class="form-control" required>
+                    </div>
                     {%endblock%} 
                 </div>
                 <div class="mb-5">

@@ -1,14 +1,18 @@
+import json
+from aiohttp import payload_type
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as dj_login,logout as dj_logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+import requests
 from clearance.models import ClearanceRequests
 from clearance.models import ControlNumbers
 from department.models import StudentItems, Items,Department
 from accounts.models import Supervisor,Student
 from department.models import StudentCourse
+from django.contrib import messages
 
 
 @login_required(login_url='/login')
@@ -60,7 +64,17 @@ def home(request):
 
 
 def login(request):
+    form = AuthenticationForm()
     if request.POST:
+        std_number = request.POST.get('std-number')
+        payload = json.dumps({'std_number': std_number})
+        response = requests.post('http://0.0.0.0:5000/student',data=payload)
+        if response.status_code != 200:
+            messages.error(request,'Failed to verify. Please try again')
+        data = response.json()
+        if not data['isValid']:
+            messages.error(request,'You are not qualified to attempt clearance')
+            return render(request, 'login.html', {'form': form})
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
@@ -69,7 +83,6 @@ def login(request):
         else:
             # messages.error(request,'Invalid email and password')
             return render(request,'login.html',{'form':form})
-    form = AuthenticationForm()
     
     return render(request,'login.html',{'form':form})
 
