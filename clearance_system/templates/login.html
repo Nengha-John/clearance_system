@@ -1,0 +1,75 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html'%}
+<body>
+    <nav class="navbar  p-3 main-bg">
+        <div class="container-fluid">
+          <!-- <a class="navbar-brand" href="#">
+            <img src="{% static 'images/logo.jpeg' %}" alt="" width="50" height="50" class="d-inline-block align-text-center">
+            Title
+          </a> -->
+          <div class="col fs-3">
+           <!-- <input type="search" class="rounded-pill col-5 text-start border-0 px-3 py-2" placeholder='  Search Patient' name="search" id="search"> -->
+            Online Clearance System
+          </div>
+          
+
+        </div>
+      </nav>
+      <div class="container mt-5 pt-5 col-4 login-form">
+          {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+         {{form.errors }}
+            </div>
+
+        {% endif %}
+            <form action="/login" method="post">
+                {% csrf_token %}
+                <p class="fs-4 align-self-center text-center"> Welcome to Online Clearance System</p>
+                      <center>
+                        <div class="col mt-3"> 
+                            {% if messages %}
+                            {% for message in messages %}
+                            {% if message.tags == 'success'%}
+                            <div class="alert alert-success" role="alert">
+                                <i class="icon ion-md-information-circle me-3" style="font-size: 24px;"></i> {{ message }}
+                            </div>
+                            {% elif message.tags == 'error'%}
+                            <div class="alert alert-danger" role="alert">
+                                <i class="icon ion-md-warning me-3" style="font-size: 24px;"></i> {{ message }}
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                   </center>
+                <div class="">
+                    
+                    {% block body%}
+                    {% for field in form%}
+                    
+                    <div class=" mb-3">
+
+                        <label for="email" class="form-label">{{ field.label }}</label>
+                        {{ field|add_class:"form-control"}}
+                        {{ field.error}}
+                        
+                    </div>
+                    {% endfor %}
+                    <div class="mb-3">
+                      <label for="std-number" class="label">Provide your registration number:</label>
+                      <input type="text" name="std-number" class="form-control">
+                    </div>
+                    {%endblock%} 
+                </div>
+                <div class="mb-5">
+                    <input class='btn main-button m-3 active px-3 py-2 fw-bold' type="submit" value="Log In">
+                </div>
+            </form>
+            </div>
+            
+</body>
+</html>
+

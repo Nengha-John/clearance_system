@@ -1,0 +1,124 @@
+{% extends 'dashboard_layout.html'%}
+
+{% block body%}
+{% if user.status %}
+<p class="text-success"> You are cleared</p>
+{% else%}
+<div class="col justify-content-start">
+    <center>
+        <div class="col-4 mt-3"> 
+            {% if messages %}
+            {% for message in messages %}
+            {% if message.tags == 'success'%}
+            <div class="alert alert-success" role="alert">
+                <i class="icon ion-md-information-circle me-3" style="font-size: 24px;"></i> {{ message }}
+            </div>
+            {% elif message.tags == 'error'%}
+            <div class="alert alert-danger" role="alert">
+                <i class="icon ion-md-warning me-3" style="font-size: 24px;"></i> {{ message }}
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+        </div>
+    </center>
+    <div class="container mt-5 col p-3 fs-5 ">
+        <div class="row">
+
+            <div class="col-1 me-3">
+                <i class="icon ion-md-happy me-3 text-success" style="font-size: 54px;"></i>
+            </div>
+            <div class="col-6">
+                
+                Hello, {{ user }}. 
+                {% if  ClearanceRequest  %}
+                <p>
+                    Your request was submitted on {{ ClearanceRequest.requested_on}}. Visit often to get the status of your request
+                </p>
+                <!-- {% if  not controlNo %}
+                <div class="col info-box p-3">
+                        <div class="h4">
+                            Make all necessary payments through a given control number
+                            <form action="{% url 'clearance:control_number'%}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="request" value="{{ClearanceRequest.id}}">
+                                <input type='submit' class="btn  main-button active mt-4 px-3 py-2 fw-bold" value="Generate Control Number">
+                            </form>
+                        </div>
+                </div>
+                {% else %}
+                <div class="col info-box p-3">
+                    <div class="h4">
+                        Here is a control number to make all necessary payments
+                    </div>
+                    <div class="bg-light p-2 fw-bold">
+                        {{ controlNo.control_no }}
+                    </div>
+                </div>
+                {% endif %} -->
+            {% else %}
+            You are currently not cleared for your certificate. To begin the process
+            ,request for clearance.
+            <br>
+            <form action="{% url 'clearance:request'%}" method="post">
+                {% csrf_token %}
+                <select name="supervisor" class="form-control">
+                            {% for supervisor in supervisors%}
+                            <option value="{{supervisor.id}}">{{ supervisor}}</option>
+                            {% endfor%}
+                </select>
+                <input type="hidden" name="student" value="{{user.id}}">
+                <input type='submit' class="btn  main-button active mt-4 px-3 py-2 fw-bold" value="Request Clearance">
+            </form>
+            {% endif %}
+        </div>
+    </div>
+            
+    </div>
+</div>
+
+<div class="container mt-5">
+    <p class="fs-4">My Items</p>
+    {% if items %}
+    <div class="col">
+
+        <div class="row bg-light p-3">
+            <div class="col">Item</div>
+            <div class="col">Quantity</div>
+            <div class="col">Borrowed Date</div>
+            <div class="col">Returned Date</div>
+            <div class="col">Status</div>
+        </div>
+        {% for item in items%}
+                        <div class="row justify-content-center p-3 text-start">
+                            <div class="col-3 text-start">{{ item.student_item}}</div>
+                            <div class="col-2">{{ item.quantity}}</div>
+                            <div class="col-3">{{ item.borrow_date}}</div>
+                            <div class="col-3">{{ item.return_date}}</div>
+                            {% if item.returned_on  %}
+                            <div class=" col-auto py-2 px-3 rounded-pill bg-success">
+                              Clear
+                            </div>
+                            {% else %}
+                            <div class=" col-auto py-2 px-3 text-white rounded-pill bg-danger">
+                                Due
+                              </div>
+                            {% endif%}
+                        </div>
+                        {% endfor%}
+
+            <div class="col">
+
+            </div>
+
+       
+    </div>
+    {% else %}
+    <p class="fs-5 text-center"> No items to dislay</p>
+    {% endif%}
+
+</div>
+
+{% endif%}
+
+{% endblock %}

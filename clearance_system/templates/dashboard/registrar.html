@@ -1,0 +1,98 @@
+{% extends 'dashboard_layout.html'%}
+
+{% block body%}
+<div class="col">
+    <div class="col-4 mt-3">
+            
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'success'%}
+        <div class="alert alert-success" role="alert">
+            <i class="icon ion-md-information-circle me-3" style="font-size: 24px;"></i> {{ message }}
+        </div>
+        {% elif message.tags == 'error'%}
+        <div class="alert alert-danger" role="alert">
+            <i class="icon ion-md-warning me-3" style="font-size: 24px;"></i> {{ message }}
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+    </div>
+    <form action="{% url 'clearance:search_student' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group mt-5">
+            <div class="col-6 justify-content-center">
+                <input type="search" class='col -6 form-control' placeholder='Search Student Number' name="query">
+            </div>
+                <input type="submit" class="input-group-text" value="Search"> 
+        </div>
+    </form>
+
+    <div class="col-10 h5 mt-5 ">
+        Clearance Requests
+    </div>
+    <div class="row bg-light p-3">
+        <div class="col">Reg No</div>
+        <div class="col">Student Name</div>
+        <div class="col">Date Requested</div>
+        <div class="col">Status</div>
+        <div class="col">Remarks</div>
+        <div class="col">Actions</div>
+    </div>
+    {% if reqs%}
+    {% for req in reqs%}
+    <div class="row p-3">
+        
+        <div class="col">{{ req.student.std_number}}</div>
+        <div class="col">{{ req.student}}</div>
+        <div class="col">{{ req.requested_on}}</div>
+        {% if req.status == 2%}
+        <div class="col">
+            <div class="col-6 text-white py-2 px-3 text-center rounded-pill bg-success">
+                Cleared
+            </div>
+        </div>
+        {% elif req.student.id not in pending_items.keys%}
+        <div class="col">
+            <div class="col-6 text-white py-2 px-3 text-center rounded-pill bg-success">
+                Cleared
+            </div>
+        </div>
+        {% else%}
+        <div class="col">
+            <div class="col-6 py-2 text-center px-3 rounded-pill text-white bg-danger">
+                Pending
+            </div>
+        </div>
+        {% endif%}
+        {% if req.student.id in pending_items.keys%}
+        <div class="col">
+                <!-- {% for item in pending_items %} {{ pending_items }},{% endfor%} not returned -->
+                {{ pending_items|get_item:req.student.id}}
+        </div>
+        {%else%}
+        <div class="col">
+            No Items in other departments
+        </div>
+        {% endif%}
+        <div class="col">
+            {% if req.status == 2 %}
+            <button type="button" class="btn main-button">View</button>
+            {% else %}
+            <form action="{% url 'clearance:registrar_clear' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="req_id" value="{{req.id}}">
+                <button type="submit" class="btn main-button">Clear</button>
+            </form>
+            {% endif%}
+        </div>
+    </div>
+    {% endfor%}
+    {%else%}
+    <div class="text-center mt-4">
+        No Requests
+    </div>
+    {% endif%}
+</div>
+
+{% endblock %}

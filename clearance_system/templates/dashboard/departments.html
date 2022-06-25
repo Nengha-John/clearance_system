@@ -1,0 +1,62 @@
+{% extends 'dashboard_layout.html'%}
+
+{% block body%}
+<div class="container row">
+ {% for dep in deps%}
+     <div class="col-lg-4 m-2 mt-4 p-4 shadow">
+         <span class="fs-4 fw-bold">
+             {{ dep.dept_name}}
+            </span><br>
+            {{dep.dept_hod }}
+
+            {% if dep.id in overdue %}
+            <div class="col mt-4">
+                    <div class="text-danger m-2">
+                        <i class="icon ion-md-warning me-1" style="font-size: 18px;"></i>You have items due in this department
+                    </div>
+                <div class="h6">
+                    Items Overdue:
+                </div>
+                <div class="row bg-light p-1">
+                    <div class="col-5">
+                        Item
+                    </div>
+                    <div class="col">
+                        Quantity
+                    </div>
+                    <div class="col">
+                        Amount
+                    </div>
+                </div>
+                {% for item in items%}
+                
+                {% if item.student_item.item_dept.id == dep.id%}
+                <div class="row p-1">
+                    <div class="col-5">
+                        {{ item.student_item  }}
+                    </div>
+                    <div class="col">
+                        {{ item.quantity  }}
+                    </div>
+                    <div class="col">
+                        {{ item.totalCost  }}
+                    </div>
+                </div>
+                <div class="text-end me-4">
+                    
+                </div>
+
+                {%endif %}
+                {% endfor %}
+            </div>
+        {% else%}
+        <div class="text-success mt-4">
+            <i class="icon ion-md-checkmark-circle me-1" style="font-size: 18px;"></i>You are cleared in this department
+        </div>
+    {% endif %}
+
+</div>
+        {% endfor%}
+    </div>
+
+{% endblock %}

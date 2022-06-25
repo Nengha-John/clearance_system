@@ -1,0 +1,85 @@
+{% extends 'dashboard_layout.html'%}
+
+{% block body%}
+<div class="col">
+
+  <div class="col-4 mt-3">
+            
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.tags == 'success'%}
+    <div class="alert alert-success" role="alert">
+        <i class="icon ion-md-information-circle me-3" style="font-size: 24px;"></i> {{ message }}
+    </div>
+    {% elif message.tags == 'error'%}
+    <div class="alert alert-danger" role="alert">
+        <i class="icon ion-md-warning me-3" style="font-size: 24px;"></i> {{ message }}
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+</div>
+    <div class="row p-3 d-flex justify-content-between">
+        <div class="col-10 h5 ">
+            Deparment Items
+        </div>
+        <div class="col">
+            <!-- Button trigger modal -->
+        <button type="button" class="btn main-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Add Item
+        </button>
+        </div>
+    </div>
+<div class="row bg-light p-3">
+    <div class="col">
+        Item Name
+    </div>
+    <div class="col">
+        Price
+    </div>
+</div>
+
+{% for item in items%}
+<div class="row p-3">
+    <div class="col">
+        {{ item.name}}
+    </div>
+    <div class="col">
+    {{ item.price}}
+    </div>
+</div>
+{% endfor %}
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Add Item</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'departments:new_item'%}" method="post">
+          {% csrf_token%}
+          {{ dept }}
+        <div class="modal-body">
+              <div class=" mb-3 ">
+                  <label for="name" class="form-label">Name:</label> 
+                  <input type="text" name="name" class= ' form-control' id="name">
+              </div>
+              <div class="mb-3">
+                    <label for="price" class="form-label">Price:</label> 
+                  <input type="number" name="price" class='form-control' id="price">
+              </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary bg-dark" data-bs-dismiss="modal">Close</button>
+                <input type="submit" value="Add" class="btn main-button">
+              </div>
+            </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

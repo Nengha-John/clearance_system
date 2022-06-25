@@ -1,0 +1,69 @@
+/* Meta
+  base color = #3929C4
+  background -test = #EFEFF7
+
+  button color #1 #29C4B5
+  button color #2 #24B697
+
+  pallete
+  #3C55E2
+  #1DC357
+  #eed024
+*/
+
+
+body{
+    color: #030334;
+    /* background: #EFEFF7; */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.main-bg{
+    background:#9edcc4a7;
+    ;
+}
+/* #FAFAFF
+#F0F2FF */
+.main-bg .navbar-brand{
+    color: #02022A;
+}
+
+.button{
+    background: #29C285;
+    color: white;
+    font-weight: bold;
+}
+
+
+#id_username, #id_password{
+    height: 40px;
+}
+
+#sticky-sidebar{
+    background: #609b84;
+    color: white;
+}
+
+#sticky-sidebar a{
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#sticky-sidebar .sidebar a:hover{
+background: #b6fde2a7;
+}
+
+.login-form{
+    background:#b6fde2a7;
+    height: auto;
+    margin: 0 auto;
+}
+
+.main-button{
+    background-color: #29C285;
+}
+
+.info-box{
+    border: solid #29C285 1px;
+}

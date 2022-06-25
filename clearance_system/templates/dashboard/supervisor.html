@@ -1,0 +1,75 @@
+{% extends 'dashboard_layout.html'%}
+
+{% block body%}
+<div class="row">
+        <div class="h4 mt-5">
+            {{ dept.dept_name }}
+        </div>
+    <div class="col-lg-4 m-2 mt-4 p-4 shadow">
+        <div class="row justify-content-around">
+            <i class="icon ion-md-pricetag me-3 col-2" style="font-size: 64px;"></i>
+            <span class="col ">
+               <div class="fw-bold fs-2">
+                {{ items|length}}
+               </div>  
+            Items
+            </span>
+        </div>
+    </div>
+    <div class="col-lg-4 m-2 mt-4 p-4 shadow">
+        <div class="row justify-content-around">
+            <i class="icon ion-md-clipboard me-3 col-2" style="font-size: 64px;"></i>
+            <span class="col ">
+               <div class="fw-bold fs-2">
+                {{ reqs|length}}
+               </div>  
+            Requests
+            </span>
+        </div>
+    </div>
+
+    <div class="col-10 h5 mt-5 ">
+        Clearance Requests
+    </div>
+    <div class="row bg-light p-3">
+        <div class="col">Student Name</div>
+        <div class="col">Date Requested</div>
+        <div class="col">Remarks</div>
+        <div class="col">Status</div>
+        <!-- <div class="col">Actions</div> -->
+    </div>
+    {% for req in reqs%}
+    <div class="row p-3">
+        <div class="col">{{ req.student}}</div>
+        <div class="col">{{ req.requested_on}}</div>
+        {% if req.student.id in pending_items.keys%}
+        <div class="col">
+                <!-- {% for item in pending_items %} {{ pending_items }},{% endfor%} not returned -->
+                {{ pending_items|get_item:req.student.id}}
+        </div>
+        {%else%}
+        <div class="col">
+            No Items due in this department
+        </div>
+        {% endif%}
+        {% if req.student.id not in pending_items.keys%}
+        <div class="col">
+            <div class="col-6 text-white py-2 px-3 text-center rounded-pill bg-success">
+                Cleared
+            </div>
+        </div>
+        {% else%}
+        <div class="col">
+            <div class="col-6 py-2 text-center px-3 rounded-pill text-white bg-danger">
+                Pending
+            </div>
+        </div>
+        {% endif%}
+       
+      
+    </div>
+    {% endfor%}
+</div>
+    
+
+{% endblock %}

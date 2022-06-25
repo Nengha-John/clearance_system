@@ -1,0 +1,11 @@
+
+
+{% block body%}
+    {% if user.supervisor.is_supervisor%}
+        {% include 'dashboard/supervisor.html'%}
+    {% elif user.registris_registrar%}
+    {% include 'dashboard/registrar.html'%}
+    {% else%}
+    {% include 'dashboard/student.html'%}
+    {% endif%}
+{% endblock %}

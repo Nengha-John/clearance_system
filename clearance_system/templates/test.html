@@ -1,0 +1,8 @@
+{% extends 'dashboard_layout.html'%}
+
+{% block body%}
+{% for field in form%}
+     {{ field.label }} <br>
+     {{ field }}
+ {% endfor %}
+ {%endblock%}
