@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 import datetime
 from accounts.models import Student
 from .models import Department, Items, StudentCourse, StudentItems
-from .forms import ItemsForm,StudentItemsForm
+from .forms import ItemsForm, StudentItemsForm
 from clearance.models import ClearanceRequests
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -21,6 +21,8 @@ def get_item(dictionary, key):
     return dictionary.get(key)
 
 # Create your views here.
+
+
 @login_required(login_url='/login')
 def departments(request):
     course = StudentCourse.objects.get(student=request.user)
@@ -33,11 +35,13 @@ def departments(request):
     for dep in non_academic:
         deps.append(dep)
     try:
-        items = StudentItems.objects.filter(student=request.user,return_date=None)
+        items = StudentItems.objects.filter(
+            student=request.user, return_date=None)
     except StudentItems.DoesNotExist:
         items = []
-    overdue_deps = [ item.student_item.item_dept.id for item in items ] 
-    return render(request,'dashboard/departments.html',{'deps': deps,'items': items,'overdue': overdue_deps})
+    overdue_deps = [item.student_item.item_dept.id for item in items]
+    return render(request, 'dashboard/departments.html', {'deps': deps, 'items': items, 'overdue': overdue_deps})
+
 
 @login_required(login_url='/login')
 def requests(request):
@@ -57,17 +61,19 @@ def requests(request):
     print(reqs)
     pending_items_students = {}
     for req in reqs:
-        student_items = StudentItems.objects.filter(student=req.student,return_date=None)
+        student_items = StudentItems.objects.filter(
+            student=req.student, return_date=None)
         if student_items:
-            pending_items_students[req.student.id] = [item.student_item for item in student_items]
-    return render(request,'dashboard/supervisor_requests.html',{'reqs': reqs,'items': items,'dept':dept[0],'pending_items':pending_items_students})
+            pending_items_students[req.student.id] = [
+                item.student_item for item in student_items]
+    return render(request, 'dashboard/supervisor_requests.html', {'reqs': reqs, 'items': items, 'dept': dept[0], 'pending_items': pending_items_students})
 
 
 @login_required(login_url='/login')
 def items(request):
     dept = Department.objects.filter(dept_hod=request.user)
     items = Items.objects.filter(item_dept=dept[0])
-    return render(request,'dashboard/supervisor_items.html',{'items':items})
+    return render(request, 'dashboard/supervisor_items.html', {'items': items})
 
 
 @login_required(login_url='/login')
@@ -75,30 +81,43 @@ def studentItems(request):
     if request.POST:
         return HttpResponse('Post items')
     else:
-         students = []
-         dept = Department.objects.filter(dept_hod=request.user.id)[0]
-         if dept.is_academic:
+        students = []
+        dept = Department.objects.filter(dept_hod=request.user.id)[0]
+        if dept.is_academic:
             courses = Course.objects.filter(course_dept=dept)
+            print(courses)
             for course in courses:
-                    studs = StudentCourse.objects.filter(course=course)
-                    for stud in studs:
-                        students.append(stud.student)
-            std_items = [ item for item in StudentItems.objects.all() if item.student in students and item.student_item.item_dept.id == dept.id]
-         else:
-            std_items = StudentItems.objects.all()
-         dept_items = Items.objects.filter(item_dept=dept.id)
-         return render(request,'dashboard/supervisor_student.html',{'items': std_items,'students': students,'dept_items': dept_items})
+                studs = StudentCourse.objects.filter(course=course)
+                for stud in studs:
+                    print(stud)
+                    students.append(stud.student)
+            std_items = [item for item in StudentItems.objects.all()
+                         if item.student in students and item.student_item.item_dept == dept]
+        else:
+            std_items_all = StudentItems.objects.all()
+            std_items = []
+            for item in std_items_all:
+                if item.student_item.item_dept.id == dept.id:
+                    std_items.append(item)
+            students = Student.objects.all()
+        for itm in std_items:
+            print(itm.student_item)
+        dept_items = Items.objects.filter(item_dept=dept.id)
 
-@login_required(login_url='/login')  
+        return render(request, 'dashboard/supervisor_student.html', {'items': std_items, 'students': students, 'dept_items': dept_items})
+
+
+@login_required(login_url='/login')
 def newItem(request):
     if request.POST:
         name = request.POST.get('name')
         price = request.POST.get('price')
         dept = Department.objects.filter(dept_hod=request.user.supervisor)[0]
-        item = Items.objects.create(name=name,item_dept=dept,price=price)
+        item = Items.objects.create(name=name, item_dept=dept, price=price)
         item = item.save()
-        messages.success(request,'Item added successfully')
+        messages.success(request, 'Item added successfully')
         return redirect('department/items')
+
 
 @login_required(login_url='/login')
 def borrowItem(request):
@@ -117,9 +136,9 @@ def borrowItem(request):
 def searchStudent(request):
     if request.POST:
         query = request.POST.get('query')
-        student= Student.objects.filter(std_number=query)
+        student = Student.objects.filter(std_number=query)
         items = StudentItems.objects.filter(student=student[0])
-        return render(request,'dashboard/supervisor_student.html',{'items':items})
+        return render(request, 'dashboard/supervisor_student.html', {'items': items})
 
 
 @login_required(login_url='login/')
@@ -127,9 +146,6 @@ def clearItem(request):
     if request.POST:
         stdItem = request.POST.get('std_item')
         item = StudentItems.objects.get(pk=stdItem)
-        item.return_date= datetime.date.today()
+        item.return_date = datetime.date.today()
         item.save()
         return redirect('/department/student_items')
-
-
-

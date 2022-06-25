@@ -87,9 +87,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'clearancedb',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '',
         'HOST': '/Applications/MAMP/tmp/mysql/mysql.sock',
-        'PORT': '8888',
+        'PORT': '3306',
     }
 }
 
