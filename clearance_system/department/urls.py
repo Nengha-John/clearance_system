@@ -11,6 +11,8 @@ urlpatterns = [
     path('item/add',views.newItem,name='new_item'),
     path('item/borrow',views.borrowItem,name='borrow_item'),
     path('search/supervisor/student',views.searchStudent,name='search_student'),
-    path('items/clear',views.clearItem,name='clear_item')
+    path('items/clear',views.clearItem,name='clear_item'),
+    path('search/student/supervisor', views.searchStudentRequest,
+         name='search_student_request'),
 ]
 

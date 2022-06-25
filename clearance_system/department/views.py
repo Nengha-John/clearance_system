@@ -136,8 +136,17 @@ def borrowItem(request):
 def searchStudent(request):
     if request.POST:
         query = request.POST.get('query')
+        dept = Department.objects.filter(dept_hod=request.user)
         student = Student.objects.filter(std_number=query)
-        items = StudentItems.objects.filter(student=student[0])
+        if student:
+            student = student[0]
+        else:
+            return redirect('/search/supervisor/student')
+        itemList = StudentItems.objects.filter(student=student[0])
+        items = []
+        for item in itemList:
+            if item.student_item.item_dept == dept:
+                items.append(item)
         return render(request, 'dashboard/supervisor_student.html', {'items': items})
 
 
@@ -149,3 +158,26 @@ def clearItem(request):
         item.return_date = datetime.date.today()
         item.save()
         return redirect('/department/student_items')
+
+
+@login_required(login_url='/login')
+def searchStudentRequest(request):
+    if request.POST:
+        query = request.POST.get('query')
+        student = Student.objects.filter(std_number=query)[0]
+        dept = Department.objects.filter(dept_hod=request.user)[0]
+        if dept.is_academic:
+            stdCourse = StudentCourse.objects.filter(student=student)
+            if not stdCourse.course.dept == dept:
+                return redirect('/supervisor/requests')
+            else:
+                student = ''
+        reqs = ClearanceRequests.objects.filter(student=student)
+        pending_items_students = {}
+        for req in reqs:
+            student_items = StudentItems.objects.filter(
+                student=req.student, return_date=None)
+            if student_items:
+                pending_items_students[req.student.id] = [
+                    item.student_item for item in student_items]
+        return render(request, 'dashboard/supervisor_requests.html', {'reqs': reqs, 'pending_items': pending_items_students})

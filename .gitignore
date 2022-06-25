@@ -1,2 +1,4 @@
 clearance
+!clearance_system/clearance
 **/__pycache__
+**/clearenv

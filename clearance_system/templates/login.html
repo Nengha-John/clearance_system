@@ -10,24 +10,29 @@
             <img src="{% static 'images/logo.jpeg' %}" alt="" width="50" height="50" class="d-inline-block align-text-center">
             Title
           </a> -->
+          
           <div class="col fs-3">
-           <!-- <input type="search" class="rounded-pill col-5 text-start border-0 px-3 py-2" placeholder='  Search Patient' name="search" id="search"> -->
+            <img src="{% static 'images/cyborg-graduation-cap.png'%}" width='70' height='50' alt="">
             Online Clearance System
           </div>
           
 
         </div>
       </nav>
-      <div class="container mt-5 pt-5 col-4 login-form">
+      <div class="container mt-5 pt-5 p-3 col-7 login-form">
           {% if form.errors %}
             <div class="alert alert-danger" role="alert">
          {{form.errors }}
             </div>
 
         {% endif %}
-            <form action="/login" method="post">
+        <div class="row">
+          <p class="fs-4 align-self-center text-center fw-bold"> Welcome to Online Clearance System</p>
+        <div class="col">
+            <img src="{% static 'images/undraw_graduation_re_gthn.svg'%}" height='100%' width='100%' alt="">
+          </div>
+            <form action="/login" method="post" class="col">
                 {% csrf_token %}
-                <p class="fs-4 align-self-center"> Welcome to Online Clearance System</p>
                  <center>
 
         <div class="col mt-3">
@@ -61,8 +66,12 @@
                     </div>
                     {% endfor %}
                     <div class="mb-3">
-                      <label for="std-number">Provide your registration number:</label>
+                      <label for="std-number" class="form-label">Reg No/Staff No:</label>
                       <input type="text" name="std-number" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                      <input type="checkbox" name="isStaff" class="form-check-input" >
+                      <label for="isStaff">Log in as Staff</label>
                     </div>
                     {%endblock%} 
                 </div>
@@ -70,6 +79,8 @@
                     <input class='btn main-button m-3 active px-3 py-2 fw-bold' type="submit" value="Log In">
                 </div>
             </form>
+        </div>
+
             </div>
             
 </body>

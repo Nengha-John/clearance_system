@@ -7,16 +7,13 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-2   position-fixed h-100 " id="sticky-sidebar">
+            <div class="col-2 pe-5   position-fixed h-100" id="sticky-sidebar">
                 <div class="row py-4">
-                    <a class="navbar-brand" href="#">
-                        <!-- <img src="{% static 'images/logo.jpeg' %}" href='#' alt="" width="70" height="70" class="d-inline-block rounded align-text-center"> -->
-                       <span>
-                        Clearance System
-                       </span>  
+                    <a class="navbar-brand fs-3 fw-bold color-text" href="#" style="color:#030334">
+                       <img src="{% static 'images/cyborg-graduation-cap.png'%}" width='70' height='50' alt="">  OCS<br>
                     </a>
                 </div>
-                <ul class="nav flex-column justify-content-between sidebar list-group list-group-flush ">
+                <ul class="nav flex-column justify-content-between sidebar list-group list-group-flush " >
                     <li class="nav-item list-group-item bg-transparent row mb-3 border-0">
                       <a class="nav-link " aria-current="page" href="{% url 'home'%}">
                         <i class="icon ion-md-home me-3" style="font-size: 24px;"></i> 
@@ -34,13 +31,13 @@
                     {% if user.registrar.is_registrar%}
                     <li class="nav-item flex-row list-group-item bg-transparent row mb-3 border-0">
                       <a class="nav-link" href="{% url 'registrar' %}">
-                        <i class="icon ion-md-clipboard me-3" style="font-size: 24px;"></i> 
+                        <i class="icon ion-md-close-circle me-3" style="font-size: 24px;"></i> 
                        <b> Pending Requests</b>
                     </a>
                     </li>
                     <li class="nav-item flex-row list-group-item bg-transparent row mb-3 border-0">
                       <a class="nav-link" href="{% url 'registrar_cleared' %}">
-                        <i class="icon ion-md-clipboard me-3" style="font-size: 24px;"></i> 
+                        <i class="icon ion-md-checkmark-circle me-3" style="font-size: 24px;"></i> 
                        <b> Cleared Requests</b>
                     </a>
                     </li>
@@ -58,7 +55,7 @@
                     {% if user.supervisor.is_supervisor %}
                     <li class="nav-item list-group-item bg-transparent row mb-3 border-0">
                       <a class="nav-link" href="{% url 'departments:department_items' %}">
-                        <i class="icon ion-md-pricetag me-3" style="font-size: 24px;"></i> 
+                        <i class="icon ion-md-pricetags me-3" style="font-size: 24px;"></i> 
                          <b> Items</b>
                         </a>
                     </li>
@@ -67,16 +64,32 @@
                     {% if user.supervisor.is_supervisor %}
                     <li class="nav-item list-group-item bg-transparent row mb-3 border-0">
                       <a class="nav-link" href="{% url 'departments:student_items' %}">
-                        <i class="icon ion-md-pricetag me-3" style="font-size: 24px;"></i> 
+                        <i class="icon ion-md-cart me-3" style="font-size: 24px;"></i> 
                          <b> Borrowed Items</b>
                         </a>
                     </li>
                     {% endif %}
 
+                    <li class="nav-item list-group-item bg-transparent row mb-3 border-0">
+                      <a class="nav-link" href="{% url 'report' %}">
+                        <i class="icon ion-md-help-circle me-3" style="font-size: 24px;"></i> 
+                         <b> Feedback</b>
+                        </a>
+                    </li>
+
                     </ul>
-                    <div class="flex-row nav-item bg-transparent border-0 justify-content-around position-absolute bottom-0 mb-3">
-                           <div>
-                            <strong>V 1.0.0</strong>
+                    <div class=" bg-transparent border-0 justify-content-around position-absolute bottom-0 mb">
+                           <div class="row mb-3 ">
+                            <div class="col-auto fs-6 fw-light">
+                              V 1.0.0
+                            </div>
+                            <div class="col-auto">
+
+                      <!-- <a class="link" href="{% url 'report' %}">
+                        <i class="icon ion-md-help-circle me-2" style="font-size: 20px;"></i> 
+                          Feedback
+                        </a> -->
+                            </div>
                            </div> 
                             <!-- <a class="nav-link " href="{% url 'home' %}">
                                 <i class="icon ion-md-medkit me-3" style="font-size: 24px;"></i> 
@@ -84,16 +97,18 @@
                               </a> -->
                       </div>
             </div>
-            <div class="col offset-2" id="main">
-                <nav class="navbar  main-bg">
+            <div class="col offset-2 w-90 " id="main" style="padding: 0px;">
+                <nav class="navbar  main-bg ">
                     <div class="container-fluid">
                       <!-- <a class="navbar-brand" href="#">
                         <img src="{% static 'images/logo.jpeg' %}" alt="" width="50" height="50" class="d-inline-block align-text-center">
                         Title
                       </a> -->
-                      <div class="col">
+                      <div class="col fs-3 fw-bold">
                        <!-- <input type="search" class="rounded-pill col-5 text-start border-0 px-3 py-2" placeholder='  Search Patient' name="search" id="search"> -->
-
+                           <span>
+                         Online Clearance System
+                       </span>  
                       </div>
                       
                       <div class="d-flex flex-row justify-self-end  px-3  py-2 ">
@@ -129,10 +144,13 @@
 
                     </div>
                   </div> -->
+                  <div class="px-3">
                 {% block body %}
                     
 
                 {%endblock %}
+                  </div>
+
             </div>
         </div>
     </div>

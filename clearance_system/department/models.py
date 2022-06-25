@@ -1,38 +1,51 @@
+from accounts.models import CustomUser
 from django.db import models
-from accounts.models import Supervisor,Student
+from accounts.models import Supervisor, Student
 
 # Create your models here.
+
+
 class Department(models.Model):
-    dept_name = models.CharField(verbose_name='Department Name',name='dept_name',max_length=100)
-    dept_head = models.ForeignKey(to=Supervisor,name='dept_hod',verbose_name='HOD',on_delete=models.PROTECT)
-    is_academic = models.BooleanField(name='is_academic',verbose_name='Is Academic',default=False)
-    
+    dept_name = models.CharField(
+        verbose_name='Department Name', name='dept_name', max_length=100)
+    dept_head = models.ForeignKey(
+        to=Supervisor, name='dept_hod', verbose_name='HOD', on_delete=models.PROTECT)
+    is_academic = models.BooleanField(
+        name='is_academic', verbose_name='Is Academic', default=False)
 
     def __str__(self) -> str:
         return self.dept_name + ' ' + str(self.dept_hod)
-    
+
     class Meta:
         db_table = 'departments'
         verbose_name = 'Department'
         verbose_name_plural = "Departments"
 
+
 class Items(models.Model):
-    name = models.CharField(verbose_name='Item Name',name='name',max_length=100)
-    department = models.ForeignKey(to=Department,on_delete=models.PROTECT,name='item_dept',verbose_name='Department')
-    price = models.IntegerField(verbose_name='price',name='price',default=0)
-    Items = models.ManyToManyField(to=Student,through='StudentItems',related_name='student_items')
+    name = models.CharField(verbose_name='Item Name',
+                            name='name', max_length=100)
+    department = models.ForeignKey(
+        to=Department, on_delete=models.PROTECT, name='item_dept', verbose_name='Department')
+    price = models.IntegerField(verbose_name='price', name='price', default=0)
+    Items = models.ManyToManyField(
+        to=Student, through='StudentItems', related_name='student_items')
 
     def __str__(self) -> str:
         return self.name
-    
+
     class Meta:
         verbose_name = 'Item'
         verbose_name_plural = "Items"
 
+
 class Course(models.Model):
-    course_name = models.CharField(verbose_name='Course Name',name='name',max_length=200)
-    dept = models.ForeignKey(to=Department,name='course_dept', on_delete=models.PROTECT)
-    years_of_study = models.IntegerField(name='years',verbose_name='Years of Study')
+    course_name = models.CharField(
+        verbose_name='Course Name', name='name', max_length=200)
+    dept = models.ForeignKey(
+        to=Department, name='course_dept', on_delete=models.PROTECT)
+    years_of_study = models.IntegerField(
+        name='years', verbose_name='Years of Study')
 
     def __str__(self) -> str:
         return self.name + str(self.course_dept)
@@ -44,9 +57,12 @@ class Course(models.Model):
 
 
 class StudentCourse(models.Model):
-    course = models.ForeignKey(to=Course,name='course',on_delete=models.PROTECT)
-    student = models.OneToOneField(to=Student,name='student',on_delete=models.PROTECT,unique=True)
-    created = models.DateField(name='create_date',verbose_name='Createdd On', auto_now_add=True)
+    course = models.ForeignKey(
+        to=Course, name='course', on_delete=models.PROTECT)
+    student = models.OneToOneField(
+        to=Student, name='student', on_delete=models.PROTECT, unique=True)
+    created = models.DateField(
+        name='create_date', verbose_name='Createdd On', auto_now_add=True)
 
     class Meta:
         db_table = 'student_courses'
@@ -55,11 +71,15 @@ class StudentCourse(models.Model):
 
 
 class StudentItems(models.Model):
-    item = models.ForeignKey(to=Items,on_delete=models.PROTECT,name='student_item')
-    student = models.ForeignKey(to=Student,on_delete=models.PROTECT,name='student')
-    borrowed_on = models.DateField(name='borrow_date',verbose_name='Borrowed On', auto_now_add=True)
-    returned_on = models.DateField(name='return_date',verbose_name='Returned On', null=True,blank=True)
-    quantity = models.IntegerField(name='quantity',verbose_name='Quantity')
+    item = models.ForeignKey(
+        to=Items, on_delete=models.PROTECT, name='student_item')
+    student = models.ForeignKey(
+        to=Student, on_delete=models.PROTECT, name='student')
+    borrowed_on = models.DateField(
+        name='borrow_date', verbose_name='Borrowed On', auto_now_add=True)
+    returned_on = models.DateField(
+        name='return_date', verbose_name='Returned On', null=True, blank=True)
+    quantity = models.IntegerField(name='quantity', verbose_name='Quantity')
 
     @property
     def totalCost(self):
@@ -70,4 +90,21 @@ class StudentItems(models.Model):
         verbose_name_plural = "Student Items"
 
 
+class Report(models.Model):
+    user = models.ForeignKey(
+        to=CustomUser, on_delete=models.DO_NOTHING, name='user')
+    message = models.CharField(
+        verbose_name='message', name='message', max_length=255)
+    email = models.EmailField(name='email', verbose_name='Email')
+    created_at = models.DateTimeField(
+        verbose_name='created_at', name='created_at', auto_now_add=True)
+    updated_at = models.DateTimeField(
+        verbose_name='updated_at', name='updated_at', auto_now=True)
 
+    class Meta:
+        db_table = 'reports'
+        verbose_name = "Report"
+        verbose_name_plural = "Reports"
+
+    def __str__(self):
+        return self.pk + self.user

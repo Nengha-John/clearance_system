@@ -18,7 +18,8 @@
         {% endfor %}
         {% endif %}
     </div>
-    <form action="{% url 'clearance:search_student' %}" method="post">
+    <center>
+    <form action="{% url 'clearance:search_student' %}"  method="post">
         {% csrf_token %}
         <div class="input-group mt-5">
             <div class="col-6 justify-content-center">
@@ -27,6 +28,8 @@
                 <input type="submit" class="input-group-text" value="Search"> 
         </div>
     </form>
+    </center>
+
 
     <div class="col-10 h5 mt-5 ">
         Clearance Requests

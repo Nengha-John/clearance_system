@@ -24,7 +24,11 @@ body{
 }
 /* #FAFAFF
 #F0F2FF */
-.main-bg .navbar-brand{
+.main-bg .color-text{
+    color: #02022A;
+}
+
+.color-text{
     color: #02022A;
 }
 
