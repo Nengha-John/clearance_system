@@ -41,7 +41,9 @@
         <div class="col">Date Requested</div>
         <div class="col">Remarks</div>
         <div class="col">Status</div>
-
+        {% if request.user.email == 'bursar@mail.com'%}
+        <div class="col">Tuition Fees</div>
+        {% endif %}
     </div>
     {% for req in reqs%}
     <div class="row p-3">
@@ -72,6 +74,11 @@
             </div>
         </div>
         {% endif%}
+         {% if request.user.email == 'bursar@mail.com'%}
+           <div class="col">
+                {{ req.student.std_number| get_tuition_status}}
+           </div> 
+    {% endif%}
     </div>
     {% endfor%}
 </div>

@@ -107,4 +107,4 @@ class Report(models.Model):
         verbose_name_plural = "Reports"
 
     def __str__(self):
-        return self.pk + self.user
+        return str(self.pk) + str(self.user) + self.email

@@ -8,9 +8,10 @@ from django.core.exceptions import ObjectDoesNotExist
 import requests
 from clearance.models import ClearanceRequests
 from clearance.models import ControlNumbers
+from department.models import Course
 from department.models import Report
 from department.models import StudentItems, Items, Department
-from accounts.models import Supervisor, Student,Registrar
+from accounts.models import Supervisor, Student, Registrar
 from department.models import StudentCourse
 from django.contrib import messages
 
@@ -64,7 +65,15 @@ def home(request):
                 except:
                     controlNo = ''
                     pass
-                return render(request, 'dashboard/student.html', {'ClearanceRequest': ClearanceRequest, 'items': items, 'supervisors': supervisor, 'controlNo': controlNo})
+                course = StudentCourse.objects.filter(student=request.user)[0]
+                dept = Department.objects.filter(
+                    pk=course.course.course_dept.id)[0]
+                try:
+                    sponsor = Supervisor.objects.get(
+                        pk=request.user.student.sponsor_id)
+                except Supervisor.DoesNotExist:
+                    sponsor = ''
+                return render(request, 'dashboard/student.html', {'ClearanceRequest': ClearanceRequest, 'items': items, 'supervisors': supervisor, 'controlNo': controlNo, 'course': course, 'dept': dept, 'sponsor': sponsor})
     return redirect(login)
 
 

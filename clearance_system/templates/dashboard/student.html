@@ -10,8 +10,11 @@
                 </span> 
             </div>
             <img src="{% static 'images/undraw_certificate_re_yadi.svg'%}" height='300px' width='70%' alt="">
-            <p class="pt-4 fs-4">
-            You are cleared to take your certificate!!
+            <p class="pt-4 fs-3">
+            You have completed your clearance.<br>
+            </p>
+            <p class="fs-4">
+            Please visit <b>{{ sponsor }}</b> to receive your certificate
 
             </p>
         </div> 
@@ -50,9 +53,11 @@
                 <img src="{% static 'images/undraw_choose_re_7d5a.svg'%}" width='90%' height='90%' alt="">
                 {% endif%}
             </div>
-            <div class="col-6 ">
+            <div class="col-9 ">
                 
-                Hello, {{ user }}.  
+               <b> Name: </b> &nbsp; {{ user }}. <br>
+               <b> Course:</b>  &nbsp; {{ course.course.name }} <br>
+               <b>  Department: &nbsp; </b> {{ dept.dept_name }} <br>
 
 
                 {% if  ClearanceRequest  %}

@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.template.defaulttags import register
 from department.models import StudentCourse, Course
+import requests as http
 
 
 @register.filter
@@ -19,6 +20,21 @@ def get_item(dictionary, key):
         val = ', '.join(items) + ' not returned'
         return val
     return dictionary.get(key)
+
+
+@register.filter
+def get_tuition_status(std_num):
+    print(std_num)
+    try:
+        feeStat = http.get(
+            'http://0.0.0.0:5000/student/{}'.format(std_num)).json()
+        if feeStat['status']:
+            return "Fully Paid"
+        else:
+            return "Due: {}".format(feeStat['due_amount'])
+    except BaseException as e:
+        return 'Not Found'
+
 
 # Create your views here.
 
@@ -61,6 +77,7 @@ def requests(request):
     print(reqs)
     pending_items_students = {}
     for req in reqs:
+        print(type(req))
         student_items = StudentItems.objects.filter(
             student=req.student, return_date=None)
         if student_items:
@@ -116,7 +133,7 @@ def newItem(request):
         item = Items.objects.create(name=name, item_dept=dept, price=price)
         item = item.save()
         messages.success(request, 'Item added successfully')
-        return redirect('department/items')
+        return redirect('/department/items')
 
 
 @login_required(login_url='/login')
@@ -137,7 +154,7 @@ def searchStudent(request):
     if request.POST:
         query = request.POST.get('query')
         dept = Department.objects.filter(dept_hod=request.user)
-        student = Student.objects.filter(std_number=query)
+        student = Student.objects.filter(std_number=query.replace(' ', ''))
         if student:
             student = student[0]
         else:
@@ -164,7 +181,7 @@ def clearItem(request):
 def searchStudentRequest(request):
     if request.POST:
         query = request.POST.get('query')
-        student = Student.objects.filter(std_number=query)[0]
+        student = Student.objects.filter(std_number=query.replace(' ', '-'))[0]
         dept = Department.objects.filter(dept_hod=request.user)[0]
         if dept.is_academic:
             stdCourse = StudentCourse.objects.filter(student=student)

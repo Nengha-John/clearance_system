@@ -28,6 +28,8 @@ def clearances(request):
         user = Student.objects.get(pk=request.user.id)
         user.sponsor_id = supervisor
         user.save()
+        course = StudentCourse.objects.filter(student=user)[0]
+        dept = Department.objects.get(pk=course.course.course_dept.id)
         ClearanceRequest = ClearanceRequests.objects.filter(student=student_id)
 
         if ClearanceRequest:
@@ -39,7 +41,7 @@ def clearances(request):
                 messages.success(request, 'Request Submitted Successfully')
             else:
                 messages.error(request, 'An error occured please try again')
-        return render(request, 'dashboard/student.html', {'ClearanceRequest': [ClearanceRequest], 'supervisors': supervisor})
+        return render(request, 'dashboard/student.html', {'ClearanceRequest': [ClearanceRequest], 'supervisors': supervisor, 'course': course, 'dept': dept})
 
 
 @login_required(login_url='/login')
@@ -108,7 +110,7 @@ def clearStudent(request):
 def searchStudent(request):
     if request.POST:
         query = request.POST.get('query')
-        student = Student.objects.filter(std_number=query)
+        student = Student.objects.filter(std_number=query.replace(' ', '-'))
         if student:
             student = student[0]
         else:

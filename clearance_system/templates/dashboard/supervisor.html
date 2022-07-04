@@ -3,7 +3,7 @@
 {% block body%}
 <div class="row">
         <div class="h4 mt-5">
-            {{ dept.dept_name }}
+            {{ dept.dept_name }} 
         </div>
     <div class="col-lg-4 m-2 mt-4 p-4 shadow">
         <div class="row justify-content-around">
@@ -36,7 +36,9 @@
         <div class="col">Date Requested</div>
         <div class="col">Remarks</div>
         <div class="col">Status</div>
-        <!-- <div class="col">Actions</div> -->
+        {% if request.user.email == 'bursar@mail.com'%}
+        <div class="col">Tuition Fees</div>
+        {% endif %}
     </div>
     {% for req in reqs%}
     <div class="row p-3">
@@ -65,7 +67,11 @@
             </div>
         </div>
         {% endif%}
-       
+    {% if request.user.email == 'bursar@mail.com'%}
+           <div class="col">
+                {{ req.student.std_number| get_tuition_status}}
+           </div>
+    {% endif%}
       
     </div>
     {% endfor%}
